@@ -28,3 +28,7 @@ services:
     # please note that last definitions always *replace* previous ones
 
     OldSound\RabbitMqBundle\RabbitMq\ProducerInterface: '@old_sound_rabbit_mq.message_producer'
+
+    App\MessageHandler\:
+        resource: '../src/MessageHandler/*'
+        tags: [messenger.message_handler]
