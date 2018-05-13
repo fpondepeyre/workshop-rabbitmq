@@ -1,0 +1,16 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            url: '%env(RABBITMQ_URL)%'
+    producers:
+        # use 'old_sound_rabbit_mq.message_producer' service to send data.
+        message:
+            connection:       default
+            exchange_options: { name: 'message', type: direct }
+
+    consumers:
+        message:
+            connection:       default
+            exchange_options: { name: 'message', type: direct }
+            queue_options:    { name: 'message' }
+            callback:         App\Consumer\MessageConsumer
