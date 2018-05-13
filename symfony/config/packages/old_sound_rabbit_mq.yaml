@@ -12,5 +12,11 @@ old_sound_rabbit_mq:
         message:
             connection:       default
             exchange_options: { name: 'message', type: direct }
-            queue_options:    { name: 'message' }
+            queue_options:    { name: 'message', arguments: {'x-dead-letter-exchange': ['S', 'message_dl']}}
+            callback:         App\Consumer\MessageConsumer
+
+        message_dl:
+            connection:       default
+            exchange_options: { name: 'message_dl', type: direct }
+            queue_options:    { name: 'message_dl' }
             callback:         App\Consumer\MessageConsumer

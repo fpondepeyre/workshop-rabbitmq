@@ -27,9 +27,9 @@ class AppMessageCommand extends Command
      */
     public function __construct(ProducerInterface $producer)
     {
-        $this->producer = $producer;
-
         parent::__construct();
+
+        $this->producer = $producer;
     }
 
     protected function configure()
@@ -37,6 +37,7 @@ class AppMessageCommand extends Command
         $this
             ->setDescription('Publish message to rabbitmq')
             ->addArgument('messages', InputArgument::OPTIONAL, 'Total message to publish', 10000)
+            ->addOption('invalid', 'i', InputOption::VALUE_NONE, 'Create invalid message ')
         ;
     }
 
@@ -50,9 +51,11 @@ class AppMessageCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $messages = $input->getArgument('messages');
+        $invalid = $input->getOption('invalid');
 
         for ($i = 0; $i < $messages; $i++) {
-            $this->producer->publish(json_encode(['message' => uniqid()]));
+            $key = ($invalid) ? 'invalid_message' : 'message';
+            $this->producer->publish(json_encode([$key => uniqid()]));
         }
 
         $io->success('Publish done !');
